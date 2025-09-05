@@ -167,17 +167,16 @@
     </div>
 
     <script type="module">
-        // --- Firebase Configuration ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rsvp-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO_KEY", authDomain: "demo.firebaseapp.com", projectId: "demo" };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
         // --- Firebase Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, setLogLevel, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // --- Firebase Initialization ---
+        // --- Firebase Configuration & Initialization ---
+        // This version uses the configuration provided by the environment.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO_FALLBACK_KEY", authDomain: "demo.firebaseapp.com", projectId: "demo" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        
         setLogLevel('debug');
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -225,8 +224,8 @@
 
             (async () => {
                 try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
+                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
                     } else {
                         await signInAnonymously(auth);
                     }
