@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event RSVP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-radio {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 50%;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #d1d5db;
+            transition: 0.2s all linear;
+            margin-right: 0.5rem;
+            position: relative;
+            top: 2px;
+        }
+        .form-radio:checked {
+            border: 6px solid #4f46e5;
+        }
+        .hidden {
+            display: none;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl mx-auto">
+
+        <!-- RSVP Form View -->
+        <div id="rsvp-view">
+            <div class="bg-white rounded-lg shadow-xl p-8 md:p-12">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold text-indigo-600">You're Invited!</h1>
+                    <p class="text-gray-600 mt-2 text-lg">Join us for Happy Hour with MPF Insurance and Elevate Wealth Management</p>
+                    <p class="mt-4 text-gray-500">October 2, 2025<br>4:30pm - 6:30pm<br>The Hotel and Rosa's Cantina<br>509 Beaver St Sewickley, PA 15143</p>
+                </div>
+
+                <div class="mt-8">
+                    <form id="rsvp-form">
+                        <div class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" name="name" id="name" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                <input type="email" name="email" id="email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+
+                            <fieldset>
+                                <legend class="block text-sm font-medium text-gray-700">Will you be attending?</legend>
+                                <div class="mt-2 space-x-6">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="attending" value="yes" class="form-radio" required>
+                                        <span class="ml-2">Yes, I'll be there!</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="attending" value="no" class="form-radio" required>
+                                        <span class="ml-2">Sorry, I can't make it</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                            
+                            <div id="guests-section" class="hidden">
+                                <label for="guests" class="block text-sm font-medium text-gray-700">Number of Additional Guests</label>
+                                <select id="guests" name="guests" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="0">Just Me</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <button type="submit" id="submit-btn" disabled class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                <svg class="spinner h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <span>Connecting...</span>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="form-message" class="mt-4 text-center"></div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button id="show-admin-login" class="text-sm text-gray-500 hover:text-indigo-600">View RSVPs (Admin)</button>
+            </div>
+        </div>
+
+        <!-- Admin Login View -->
+        <div id="admin-login-view" class="hidden">
+             <div class="bg-white rounded-lg shadow-xl p-8 md:p-12">
+                <h2 class="text-2xl font-bold text-center">Admin Access</h2>
+                <p class="text-center text-gray-500 mt-2">Enter the password to view RSVPs.</p>
+                <form id="admin-login-form" class="mt-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <button type="submit" class="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">View List</button>
+                    <p id="login-error" class="text-red-500 text-sm mt-2 text-center"></p>
+                </form>
+                 <button id="back-to-rsvp-login" class="mt-4 text-sm text-indigo-600 hover:underline">← Back to RSVP Form</button>
+            </div>
+        </div>
+
+        <!-- Admin List View -->
+        <div id="admin-view" class="hidden">
+            <div class="bg-white rounded-lg shadow-xl p-8 md:p-12">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Guest List</h2>
+                    <button id="back-to-rsvp" class="text-sm text-indigo-600 hover:underline">← Back to RSVP Form</button>
+                </div>
+
+                <div id="rsvp-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <p class="text-sm text-gray-500">Total RSVPs</p>
+                        <p id="total-rsvps" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-green-100 p-4 rounded-lg">
+                        <p class="text-sm text-green-700">Total Attending</p>
+                        <p id="total-attending" class="text-2xl font-bold text-green-800">0</p>
+                    </div>
+                    <div class="bg-red-100 p-4 rounded-lg">
+                        <p class="text-sm text-red-700">Not Attending</p>
+                        <p id="total-not-attending" class="text-2xl font-bold text-red-800">0</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                     <div id="loader" class="text-center py-8">Loading RSVPs...</div>
+                     <div id="no-rsvps" class="hidden text-center py-8 text-gray-500">No RSVPs received yet.</div>
+                     <table class="min-w-full divide-y divide-gray-200 hidden" id="rsvp-table">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guests</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rsvp-list" class="bg-white divide-y divide-gray-200">
+                            <!-- RSVP data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- Firebase Configuration ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-rsvp-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEMO_KEY", authDomain: "demo.firebaseapp.com", projectId: "demo" };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // --- Firebase Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, setLogLevel, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // --- Firebase Initialization ---
+        setLogLevel('debug');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // --- DOM Elements ---
+        const rsvpForm = document.getElementById('rsvp-form');
+        const formMessage = document.getElementById('form-message');
+        const guestsSection = document.getElementById('guests-section');
+        const submitBtn = document.getElementById('submit-btn');
+        const attendingRadios = document.querySelectorAll('input[name="attending"]');
+        const rsvpView = document.getElementById('rsvp-view');
+        const adminLoginView = document.getElementById('admin-login-view');
+        const adminView = document.getElementById('admin-view');
+        const showAdminLoginBtn = document.getElementById('show-admin-login');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const loginError = document.getElementById('login-error');
+        const backToRsvpBtn = document.getElementById('back-to-rsvp');
+        const backToRsvpLoginBtn = document.getElementById('back-to-rsvp-login');
+        const rsvpList = document.getElementById('rsvp-list');
+        const rsvpTable = document.getElementById('rsvp-table');
+        const loader = document.getElementById('loader');
+        const noRsvpsMsg = document.getElementById('no-rsvps');
+
+        // --- Constants ---
+        const ADMIN_PASSWORD = "event"; 
+
+        // --- View Management ---
+        function showView(viewToShow) {
+            rsvpView.classList.add('hidden');
+            adminLoginView.classList.add('hidden');
+            adminView.classList.add('hidden');
+            document.getElementById(viewToShow).classList.remove('hidden');
+        }
+        
+        // --- Main Application Logic ---
+        function startApp() {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("Authentication successful. Form is now active.");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Send RSVP</span>';
+                }
+                // If user is null, the sign-in process below will handle the error state.
+            });
+
+            (async () => {
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Critical: Authentication failed!", error);
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span>Connection Failed</span>';
+                    formMessage.textContent = 'Could not connect to the RSVP service. Please refresh the page and try again.';
+                    formMessage.className = 'text-red-600 font-semibold';
+                }
+            })();
+
+            rsvpForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!auth.currentUser) {
+                    formMessage.textContent = 'Connection error. Please refresh the page and try again.';
+                    formMessage.className = 'text-red-600 font-semibold';
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg class="spinner h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Submitting...</span>';
+                formMessage.textContent = '';
+
+                try {
+                    const formData = new FormData(rsvpForm);
+                    const rsvpData = {
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        attending: formData.get('attending') === 'yes',
+                        guests: formData.get('attending') === 'yes' ? parseInt(formData.get('guests'), 10) : 0,
+                        timestamp: serverTimestamp(),
+                        uid: auth.currentUser.uid
+                    };
+
+                    const rsvpsCollection = collection(db, `/artifacts/${appId}/public/data/rsvps`);
+                    await addDoc(rsvpsCollection, rsvpData);
+
+                    formMessage.textContent = "Thank you! Your RSVP has been recorded.";
+                    formMessage.className = "text-green-600 font-medium";
+                    rsvpForm.reset();
+                    guestsSection.classList.add('hidden');
+
+                } catch (error) {
+                    console.error("Error during submission:", error);
+                    formMessage.textContent = `An error occurred during submission. Please try again.`;
+                    formMessage.className = "text-red-500 font-medium";
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>Send RSVP</span>';
+                }
+            });
+
+            // Set up remaining UI listeners.
+            attendingRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === 'no') {
+                        document.getElementById('guests').value = '0'; 
+                        guestsSection.classList.add('hidden');
+                    } else {
+                        guestsSection.classList.remove('hidden');
+                    }
+                });
+            });
+
+            showAdminLoginBtn.addEventListener('click', () => showView('admin-login-view'));
+            backToRsvpBtn.addEventListener('click', () => showView('rsvp-view'));
+            backToRsvpLoginBtn.addEventListener('click', () => showView('rsvp-view'));
+            
+            adminLoginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                if (password === ADMIN_PASSWORD) {
+                    showView('admin-view');
+                    loadRsvps();
+                } else {
+                    loginError.textContent = "Incorrect password. Please try again.";
+                    setTimeout(() => { loginError.textContent = ''; }, 3000);
+                }
+                adminLoginForm.reset();
+            });
+        }
+
+        // --- Load and Display RSVPs (Admin View) ---
+        function loadRsvps() {
+            const rsvpsCollection = collection(db, `/artifacts/${appId}/public/data/rsvps`);
+            const q = query(rsvpsCollection);
+
+            onSnapshot(q, (snapshot) => {
+                loader.classList.add('hidden');
+                if (snapshot.empty) {
+                    noRsvpsMsg.classList.remove('hidden');
+                    rsvpTable.classList.add('hidden');
+                    updateSummary(0, 0, 0);
+                    return;
+                }
+
+                noRsvpsMsg.classList.add('hidden');
+                rsvpTable.classList.remove('hidden');
+                
+                let notAttendingCount = 0;
+                let totalPeopleAttending = 0;
+                
+                const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                docs.sort((a, b) => {
+                    const aTime = a.timestamp ? a.timestamp.toMillis() : 0;
+                    const bTime = b.timestamp ? b.timestamp.toMillis() : 0;
+                    return bTime - aTime;
+                });
+
+                rsvpList.innerHTML = '';
+                docs.forEach(data => {
+                    if (data.attending) {
+                        totalPeopleAttending += (1 + data.guests); 
+                    } else {
+                        notAttendingCount++;
+                    }
+
+                    const row = `
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                ${data.attending 
+                                    ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Attending</span>' 
+                                    : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Not Attending</span>'
+                                }
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.attending ? data.guests : 'N/A'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${data.email}</td>
+                        </tr>
+                    `;
+                    rsvpList.innerHTML += row;
+                });
+                
+                updateSummary(snapshot.size, totalPeopleAttending, notAttendingCount);
+
+            }, (error) => {
+                console.error("Error fetching RSVPs:", error);
+                loader.textContent = "Error loading data. Please refresh.";
+            });
+        }
+        
+        function updateSummary(totalRsvps, totalAttendingPeople, totalNotAttending) {
+            document.getElementById('total-rsvps').textContent = totalRsvps;
+            document.getElementById('total-attending').textContent = totalAttendingPeople;
+            document.getElementById('total-not-attending').textContent = totalNotAttending;
+        }
+
+        // --- Start the App ---
+        startApp();
+
+    </script>
+</body>
+</html>
+
