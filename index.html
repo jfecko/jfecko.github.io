@@ -3,652 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event RSVP - October 2nd</title>
+    <title>You're Invited! Work Event RSVP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
         }
-
-        .background-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
+        /* Simple animation for the confirmation message */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(1deg); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            transform: translateY(20px);
-            opacity: 0;
-            animation: slideIn 0.8s ease-out forwards;
-            width: 100%;
-        }
-
-        @keyframes slideIn {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .event-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .event-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            line-height: 1.2;
-        }
-
-        .event-subtitle {
-            font-size: 1.1rem;
-            color: #64748b;
-            font-weight: 400;
-        }
-
-        .event-details {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
-            border: 1px solid rgba(226, 232, 240, 0.5);
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 1rem;
-            color: #475569;
-        }
-
-        .detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 12px;
-            opacity: 0.7;
-        }
-
-        .rsvp-form {
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .rsvp-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .rsvp-button {
-            padding: 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .rsvp-button:hover {
-            border-color: #667eea;
-            transform: translateY(-1px);
-        }
-
-        .rsvp-button.selected {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-color: transparent;
-        }
-
-        .submit-button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
-        }
-
-        .submit-button:active {
-            transform: translateY(0);
-        }
-
-        .submit-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .admin-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            z-index: 1000;
-        }
-
-        .admin-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .admin-content {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            position: relative;
-        }
-
-        .admin-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #6b7280;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .admin-close:hover {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(226, 232, 240, 0.5);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-        .rsvp-list {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .rsvp-item {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #e5e7eb;
-            transition: all 0.2s ease;
-        }
-
-        .rsvp-item:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .rsvp-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .rsvp-name {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 4px;
-        }
-
-        .rsvp-email {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-
-        .rsvp-status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .rsvp-status.attending {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .rsvp-status.not-attending {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .rsvp-guest-info {
-            margin-top: 8px;
-            font-size: 0.9rem;
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .success-message {
-            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-            color: #166534;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid #86efac;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 16px;
-            }
-
-            .card {
-                padding: 24px;
-            }
-
-            .event-title {
-                font-size: 2rem;
-            }
-
-            .rsvp-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-content {
-                padding: 20px;
-                margin: 20px;
-            }
-
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
     </style>
 </head>
-<body>
-    <div class="background-animation"></div>
-    
-    <button class="admin-toggle" onclick="toggleAdmin()">View RSVPs</button>
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="container">
-        <div class="card">
-            <div class="success-message" id="successMessage">
-                🎉 Thank you for your RSVP! We look forward to seeing you there.
+    <div class="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+        
+        <!-- Event Details Section -->
+        <div class="bg-white shadow-lg rounded-xl p-8 mb-8 border border-gray-200">
+            <div class="text-center">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">You're Invited!</h1>
+                <p class="mt-3 text-lg text-gray-600">Happy Hour with MPF Insurance & Elevate Wealth Management</p>
             </div>
 
-            <div class="event-header">
-                <h1 class="event-title">You're Invited!</h1>
-                <p class="event-subtitle">Join us for an unforgettable evening</p>
+            <div class="mt-8 space-y-6">
+                <p class="text-gray-600 text-center">Thursday, October 2, 2025<br>4:30 PM - 6:30 PM</p>
+                <p class="text-gray-600 text-center">The Hotel and Rosa's Cantina<br>509 Beaver St, Sewickley, PA 15143</p>
             </div>
+        </div>
 
-            <div class="event-details">
-                <div class="detail-item">
-                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <div>
-                        <strong>Date:</strong> October 2, 2025<br>
-                        <strong>Time:</strong> 4:30 PM - 6:30 PM
-                    </div>
+        <!-- RSVP Form Section -->
+        <div id="rsvp-section" class="bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold text-center text-gray-900">RSVP Here</h2>
+            <form id="rsvp-form" class="mt-6 space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
-                <div class="detail-item">
-                    <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    <div>
-                        <strong>Location:</strong> The Hotel and Rosa's Cantina<br>
-                        509 Beaver St, Sewickley, PA 15143
-                    </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
-            </div>
-
-            <form class="rsvp-form" id="rsvpForm">
-                <div class="form-group">
-                    <label class="form-label" for="name">Full Name *</label>
-                    <input type="text" id="name" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address *</label>
-                    <input type="email" id="email" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Will you be attending? *</label>
-                    <div class="rsvp-buttons">
-                        <button type="button" class="rsvp-button" onclick="selectRSVP('yes')" id="yesBtn">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                            </svg>
-                            Yes, I'll be there!
-                        </button>
-                        <button type="button" class="rsvp-button" onclick="selectRSVP('no')" id="noBtn">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                            Can't make it
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="guestCount">How many people total (including yourself)?</label>
-                    <select id="guestCount" class="form-input">
+                <div>
+                    <label for="attending" class="block text-sm font-medium text-gray-700">How many attending?</label>
+                    <select id="attending" name="attending" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="1">Just me</option>
-                        <option value="2">2 people</option>
-                        <option value="3">3 people</option>
-                        <option value="4">4 people</option>
-                        <option value="5">5 people</option>
-                        <option value="6">6 people</option>
-                        <option value="7">7 people</option>
-                        <option value="8">8 people</option>
-                        <option value="9">9 people</option>
-                        <option value="10">10 people</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
                     </select>
                 </div>
-
-                <button type="submit" class="submit-button">Send RSVP</button>
+                <button type="submit" id="submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    Submit RSVP
+                </button>
             </form>
+            <div id="confirmation-message" class="hidden mt-6 text-center"></div>
         </div>
-    </div>
 
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
-            <button class="admin-close" onclick="toggleAdmin()">&times;</button>
-            <h2 style="margin-bottom: 24px; color: #374151; font-size: 1.8rem;">RSVP Management</h2>
-            
-            <div class="admin-stats" id="adminStats">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalRsvps">0</div>
-                    <div class="stat-label">Total RSVPs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="attendingCount">0</div>
-                    <div class="stat-label">Attending</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="notAttendingCount">0</div>
-                    <div class="stat-label">Not Attending</div>
-                </div>
+        <!-- Admin View Section -->
+        <div class="mt-8 text-center">
+             <button id="view-rsvps-btn" class="text-sm text-indigo-600 hover:text-indigo-800">View RSVPs (Admin)</button>
+        </div>
+        
+        <div id="admin-section" class="hidden mt-8 bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">Guest List</h2>
+            <div id="rsvp-list" class="space-y-4">
+                <p class="text-gray-500 text-center">No RSVPs yet.</p>
             </div>
-
-            <h3 style="margin-bottom: 16px; color: #374151;">All RSVPs</h3>
-            <div class="rsvp-list" id="rsvpList">
-                <p style="text-align: center; color: #6b7280; font-style: italic;">No RSVPs yet</p>
+            <div class="mt-6 text-center">
+                 <p class="text-sm font-bold">Total Attending: <span id="total-attending">0</span></p>
             </div>
         </div>
+
     </div>
 
-    <script>
-        let rsvpData = [];
-        let selectedRsvp = null;
+    <script type="module">
+        // --- Firebase Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        function selectRSVP(choice) {
-            selectedRsvp = choice;
-            const yesBtn = document.getElementById('yesBtn');
-            const noBtn = document.getElementById('noBtn');
-            
-            yesBtn.classList.remove('selected');
-            noBtn.classList.remove('selected');
-            
-            if (choice === 'yes') {
-                yesBtn.classList.add('selected');
-            } else {
-                noBtn.classList.add('selected');
+        // --- Firebase Configuration ---
+        // These global variables are provided by the environment.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'rsvp-app-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "DEFAULT_API_KEY", authDomain: "DEFAULT_AUTH_DOMAIN", projectId: "DEFAULT_PROJECT_ID" };
+
+        let app, db, auth;
+
+        // --- App State ---
+        let rsvpsUnsubscribe = null;
+
+        // --- UI Elements ---
+        const rsvpForm = document.getElementById('rsvp-form');
+        const submitButton = document.getElementById('submit-button');
+        const confirmationMessage = document.getElementById('confirmation-message');
+        const viewRsvpsBtn = document.getElementById('view-rsvps-btn');
+        const adminSection = document.getElementById('admin-section');
+        const rsvpListContainer = document.getElementById('rsvp-list');
+        const totalAttendingSpan = document.getElementById('total-attending');
+
+        // --- Initialization ---
+        async function initializeFirebase() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                await setPersistence(auth, browserLocalPersistence);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+                confirmationMessage.textContent = 'Error initializing application. Please try again later.';
+                confirmationMessage.className = 'fade-in p-4 bg-red-100 text-red-700 rounded-md';
+                confirmationMessage.classList.remove('hidden');
             }
         }
+        
+        // --- Firestore Logic ---
 
-        function toggleAdmin() {
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanel.style.display === 'block') {
-                adminPanel.style.display = 'none';
-            } else {
-                adminPanel.style.display = 'block';
-                updateAdminView();
-            }
-        }
+        // Function to submit RSVP data
+        async function submitRsvp(event) {
+            event.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
 
-        function updateAdminView() {
-            const totalRsvps = document.getElementById('totalRsvps');
-            const attendingCount = document.getElementById('attendingCount');
-            const notAttendingCount = document.getElementById('notAttendingCount');
-            const rsvpList = document.getElementById('rsvpList');
-
-            totalRsvps.textContent = rsvpData.length;
-            attendingCount.textContent = rsvpData.filter(rsvp => rsvp.attending === 'yes').length;
-            notAttendingCount.textContent = rsvpData.filter(rsvp => rsvp.attending === 'no').length;
-
-            if (rsvpData.length === 0) {
-                rsvpList.innerHTML = '<p style="text-align: center; color: #6b7280; font-style: italic;">No RSVPs yet</p>';
-            } else {
-                rsvpList.innerHTML = rsvpData.map(rsvp => `
-                    <div class="rsvp-item">
-                        <div class="rsvp-name">${rsvp.name}</div>
-                        <div class="rsvp-email">${rsvp.email}</div>
-                        <span class="rsvp-status ${rsvp.attending === 'yes' ? 'attending' : 'not-attending'}">
-                            ${rsvp.attending === 'yes' ? 'Attending' : 'Not Attending'}
-                        </span>
-                        ${parseInt(rsvp.guestCount) > 1 ? `<div class="rsvp-guest-info">${rsvp.guestCount} people total</div>` : `<div class="rsvp-guest-info">Just themselves</div>`}
-                    </div>
-                `).join('');
-            }
-        }
-
-        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!selectedRsvp) {
-                alert('Please select whether you will be attending.');
-                return;
-            }
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const guestCount = document.getElementById('guestCount').value;
-
-            const newRsvp = {
-                name: name,
-                email: email,
-                attending: selectedRsvp,
-                guestCount: guestCount || '1',
-                timestamp: new Date().toISOString()
+            const formData = new FormData(rsvpForm);
+            const rsvpData = {
+                name: formData.get('name').trim(),
+                email: formData.get('email').trim(),
+                attending: parseInt(formData.get('attending'), 10),
+                submittedAt: new Date()
             };
 
-            rsvpData.push(newRsvp);
+            try {
+                // Using a public collection path for guest RSVPs
+                const collectionPath = `/artifacts/${appId}/public/data/rsvps`;
+                await addDoc(collection(db, collectionPath), rsvpData);
+                
+                // Show success message
+                document.getElementById('rsvp-section').innerHTML = `
+                    <div class="text-center p-4 fade-in">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h2 class="mt-4 text-2xl font-bold text-gray-900">Thank You!</h2>
+                        <p class="mt-2 text-gray-600">Your RSVP has been received. We look forward to seeing you!</p>
+                    </div>
+                `;
 
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                confirmationMessage.textContent = 'There was an error submitting your RSVP. Please try again.';
+                confirmationMessage.className = 'fade-in p-4 bg-red-100 text-red-700 rounded-md';
+                confirmationMessage.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit RSVP';
+            }
+        }
+        
+        // Function to fetch and display RSVPs for admin
+        function listenForRsvps() {
+            if (rsvpsUnsubscribe) {
+                rsvpsUnsubscribe(); // Stop any previous listener
+            }
             
-            // Reset form
-            document.getElementById('rsvpForm').reset();
-            selectedRsvp = null;
-            document.getElementById('yesBtn').classList.remove('selected');
-            document.getElementById('noBtn').classList.remove('selected');
+            const collectionPath = `/artifacts/${appId}/public/data/rsvps`;
+            const q = query(collection(db, collectionPath));
 
-            // Scroll to top to show success message
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            rsvpsUnsubscribe = onSnapshot(q, (querySnapshot) => {
+                const rsvps = [];
+                let totalAttending = 0;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    rsvps.push(data);
+                    totalAttending += data.attending || 0;
+                });
+                
+                // Sort RSVPs by submission date, newest first
+                rsvps.sort((a, b) => b.submittedAt.toMillis() - a.submittedAt.toMillis());
 
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
+                displayRsvps(rsvps);
+                totalAttendingSpan.textContent = totalAttending;
+
+            }, (error) => {
+                console.error("Error listening for RSVPs: ", error);
+                rsvpListContainer.innerHTML = `<p class="text-red-500 text-center">Error loading RSVPs.</p>`;
+            });
+        }
+
+        // Function to render the list of RSVPs
+        function displayRsvps(rsvps) {
+            rsvpListContainer.innerHTML = ''; // Clear previous list
+            if (rsvps.length === 0) {
+                rsvpListContainer.innerHTML = `<p class="text-gray-500 text-center">No RSVPs yet.</p>`;
+                return;
+            }
+            
+            const list = document.createElement('ul');
+            list.className = 'divide-y divide-gray-200';
+            
+            rsvps.forEach(rsvp => {
+                const item = document.createElement('li');
+                item.className = 'p-4';
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold text-gray-800">${rsvp.name}</p>
+                            <p class="text-sm text-gray-500">${rsvp.email}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-indigo-600">${rsvp.attending} Attending</p>
+                            <p class="text-xs text-gray-400 mt-1">${rsvp.submittedAt.toDate().toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+            
+            rsvpListContainer.appendChild(list);
+        }
+
+        // --- Event Listeners ---
+        rsvpForm.addEventListener('submit', submitRsvp);
+
+        viewRsvpsBtn.addEventListener('click', () => {
+             // A simple passcode prompt for viewing RSVPs.
+             // IMPORTANT: This is not high security, but prevents casual viewing.
+             // Change 'admin123' to your own secret password.
+            const passcode = prompt("Please enter the admin passcode to view RSVPs:");
+            if (passcode === "admin123") {
+                adminSection.classList.remove('hidden');
+                adminSection.classList.add('fade-in');
+                viewRsvpsBtn.style.display = 'none'; // Hide button after access
+                listenForRsvps();
+            } else if (passcode) { // if user entered something but it was wrong
+                alert("Incorrect passcode.");
+            }
         });
 
-        // Add some sample data for demonstration
-        rsvpData = [
-            {
-                name: "Sarah Johnson",
-                email: "sarah@example.com",
-                attending: "yes",
-                guestCount: "3",
-                timestamp: "2025-09-01T10:00:00Z"
-            },
-            {
-                name: "Mike Chen",
-                email: "mike@example.com",
-                attending: "yes",
-                guestCount: "2",
-                timestamp: "2025-09-02T14:30:00Z"
-            },
-            {
-                name: "Emily Rodriguez",
-                email: "emily@example.com",
-                attending: "no",
-                guestCount: "1",
-                timestamp: "2025-09-03T09:15:00Z"
-            }
-        ];
+        // --- Start the App ---
+        initializeFirebase();
+
     </script>
 </body>
 </html>
+
+
